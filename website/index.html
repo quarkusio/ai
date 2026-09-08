@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quarkus AI</title>
+<meta name="description" content="Enterprise AI for Java. Built from the Quarkus AI project README.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 196 196'%3E%3Cpath d='m126.05 34.6-29.44 16.99 29.44 17z' fill='%234695eb'/%3E%3Cpath d='m67.17 34.6v33.99l29.44-17z' fill='%23ff004a'/%3E%3Cpath d='m126.05 68.59-29.44-17-29.44 17 29.44 17z' fill='%23fff'/%3E%3Cpath d='m36.13 88.36 29.44 17v-33.99z' fill='%234695eb'/%3E%3Cpath d='m65.57 139.35 29.44-16.99-29.44-17z' fill='%23ff004a'/%3E%3Cpath d='m65.57 71.37v33.99l29.44 17v-34z' fill='%23fff'/%3E%3Cpath d='m127.65 139.35v-33.99l-29.44 17z' fill='%234695eb'/%3E%3Cpath d='m157.09 88.36-29.44-16.99v33.99z' fill='%23ff004a'/%3E%3Cpath d='m98.21 122.36 29.44-17v-33.99l-29.44 16.99z' fill='%23fff'/%3E%3Cpath d='m160.5 1h-127.78a31.81 31.81 0 0 0 -31.72 31.72v127.78a31.81 31.81 0 0 0 31.72 31.72h87.51l-23.62-57.37-17.13 36.22h-46.76a10.71 10.71 0 0 1 -10.57-10.57v-127.78a10.71 10.71 0 0 1 10.57-10.57h127.78a10.71 10.71 0 0 1 10.57 10.57v127.78a10.71 10.71 0 0 1 -10.57 10.57h-27.73l8.71 21.15h19a31.81 31.81 0 0 0 31.72-31.72v-127.78a31.81 31.81 0 0 0 -31.7-31.72z' fill='%234695eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#FFFFFF;
+  --bg-alt:#E4EDF7;
+  --surface:#FFFFFF;
+  --ink:#121212;
+  --ink-muted:#4B5B6B;
+  --ink-faint:#7C8B9A;
+  --border:#DCE6F0;
+  --accent:#1259A5;
+  --accent-strong:#0D3F73;
+  --accent-soft:rgba(18,89,165,0.08);
+  --accent-ink:#FFFFFF;
+  --chip-bg:#E4EDF7;
+  --state:#B36A00;
+  --state-bg:rgba(241,143,1,0.12);
+  --shadow:0 20px 45px -28px rgba(13,28,44,0.35);
+  --code-bg:#0D1C2C;
+  --code-ink:#E8EEF5;
+  --code-muted:#7C93A8;
+  --code-annot:#FF6B93;
+  --code-kw:#8ABDF5;
+  --code-str:#F0CA4D;
+  --header-bg:#0D1C2C;
+  --header-ink:#FFFFFF;
+  --header-ink-muted:rgba(255,255,255,0.68);
+  --header-border:rgba(255,255,255,0.14);
+  --header-accent:#4695EB;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A1119;
+    --bg-alt:#0F1A26;
+    --surface:#101A26;
+    --ink:#E9EEF3;
+    --ink-muted:#93A6B8;
+    --ink-faint:#66798C;
+    --border:rgba(150,190,230,0.14);
+    --accent:#4695EB;
+    --accent-strong:#9BCAFA;
+    --accent-soft:rgba(70,149,235,0.18);
+    --accent-ink:#061019;
+    --chip-bg:#101B29;
+    --state:#F0CA4D;
+    --state-bg:rgba(240,202,77,0.16);
+    --shadow:0 20px 50px -24px rgba(0,0,0,0.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A1119;
+  --bg-alt:#0F1A26;
+  --surface:#101A26;
+  --ink:#E9EEF3;
+  --ink-muted:#93A6B8;
+  --ink-faint:#66798C;
+  --border:rgba(150,190,230,0.14);
+  --accent:#4695EB;
+  --accent-strong:#9BCAFA;
+  --accent-soft:rgba(70,149,235,0.18);
+  --accent-ink:#061019;
+  --chip-bg:#101B29;
+  --state:#F0CA4D;
+  --state-bg:rgba(240,202,77,0.16);
+  --shadow:0 20px 50px -24px rgba(0,0,0,0.6);
+}
+
+*{box-sizing:border-box;}
+html{background:var(--bg);}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Manrope",ui-sans-serif,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.6;
+}
+img,svg{max-width:100%;}
+a{color:inherit;text-decoration:none;}
+.mono{font-family:"IBM Plex Mono",ui-monospace,"SF Mono",monospace;}
+h1,h2,h3{text-wrap:balance;margin:0;font-weight:800;letter-spacing:-0.015em;}
+p{margin:0;}
+a:focus-visible,button:focus-visible,summary:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;
+}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+
+.wrap{max-width:1160px;margin:0 auto;padding-left:clamp(1.2rem,4vw,2.5rem);padding-right:clamp(1.2rem,4vw,2.5rem);}
+
+.eyebrow{
+  font-family:"IBM Plex Mono";font-size:.72rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strong);
+}
+.pill{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.35rem .8rem;border-radius:99px;border:1px solid var(--border);
+  font-family:"IBM Plex Mono";font-size:.75rem;color:var(--ink-muted);background:var(--surface);
+}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.state-pill{
+  display:inline-flex;align-items:center;font-family:"IBM Plex Mono";font-size:.66rem;
+  font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--state);
+  background:var(--state-bg);padding:.2rem .55rem;border-radius:99px;
+}
+
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.75rem 1.3rem;border-radius:9px;font-weight:600;font-size:.94rem;
+  border:1px solid transparent;transition:transform .15s ease, background .15s ease, border-color .15s ease;
+}
+.btn:hover{transform:translateY(-1px);}
+.btn-primary{background:var(--accent);color:var(--accent-ink);}
+.btn-primary:hover{background:var(--accent-strong);}
+.btn-secondary{background:transparent;border-color:var(--border);color:var(--ink);}
+.btn-secondary:hover{border-color:var(--ink-faint);}
+
+/* nav */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb, var(--header-bg) 94%, transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--header-border);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 0;}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.02rem;color:var(--header-ink);}
+.brand-logo{height:1.05rem;width:auto;display:block;}
+.brand-suffix{
+  font-family:"IBM Plex Mono";font-weight:700;font-size:.78rem;letter-spacing:.04em;
+  color:var(--header-accent);border-left:1px solid var(--header-border);
+  padding-left:.6rem;margin-left:.05rem;
+}
+.nav-links{display:flex;gap:1.15rem;font-size:.87rem;color:var(--header-ink-muted);}
+.nav-links a:hover,.nav-links a.active{color:var(--header-ink);}
+.nav-cta{display:flex;align-items:center;gap:.7rem;}
+.site-header .btn-secondary{border-color:var(--header-border);color:var(--header-ink);}
+.site-header .btn-secondary:hover{border-color:rgba(255,255,255,.4);}
+@media (max-width:960px){.nav-links{display:none;}}
+
+/* hero */
+.hero{padding:clamp(1.2rem,3vw,2rem) 0 clamp(2.5rem,6vw,4rem);text-align:center;}
+.hero h1{font-size:clamp(2.4rem,5.4vw,3.6rem);line-height:1.08;max-width:16ch;margin:0 auto;}
+.hero p.lede{max-width:56ch;margin:1.2rem auto 0;color:var(--ink-muted);font-size:1.1rem;}
+
+.chip-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.55rem;
+  margin-top:2.6rem;
+}
+.chip-row span{
+  font-family:"IBM Plex Mono";font-size:.76rem;color:var(--ink-muted);
+  background:var(--chip-bg);border:1px solid var(--border);border-radius:99px;padding:.35rem .75rem;
+}
+
+/* sections */
+section{padding:clamp(3rem,7vw,4.5rem) 0;border-top:1px solid var(--border);}
+.section-head{max-width:640px;margin-bottom:2.2rem;}
+.section-head h2{font-size:clamp(1.7rem,3.2vw,2.3rem);margin-top:.6rem;}
+.section-head p{color:var(--ink-muted);margin-top:.7rem;font-size:1.02rem;}
+.alt-bg{background:var(--bg-alt);}
+
+/* cycling panel */
+.panel-region{padding:0 0 clamp(3rem,7vw,4.5rem);}
+.panel{
+  position:relative;border:1px solid var(--border);border-radius:20px;
+  background:var(--surface);box-shadow:var(--shadow);overflow:hidden;
+}
+.panel-progress{height:3px;background:var(--border);}
+.panel-progress-bar{height:100%;width:0%;background:var(--accent);opacity:0;}
+.panel-progress-bar.bar-anim{opacity:1;animation:panelProgress 6000ms linear forwards;}
+@keyframes panelProgress{from{width:0%;}to{width:100%;}}
+
+.panel-slides{position:relative;padding:clamp(2rem,5vw,3rem);overflow:hidden;transition:height .4s ease;}
+.panel-slide{display:none;}
+.panel-slide.is-active{display:block;animation:panelFade .35s ease;}
+@keyframes panelFade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.panel-controls{display:flex;align-items:center;justify-content:center;gap:1.2rem;padding:.3rem clamp(1.2rem,4vw,2rem);}
+.panel-controls-top{border-bottom:1px solid var(--border);}
+.panel-arrow{
+  flex:none;width:2.4rem;height:2.4rem;border-radius:50%;border:1px solid var(--border);
+  background:var(--surface);color:var(--ink-muted);display:grid;place-items:center;cursor:pointer;
+  transition:border-color .15s ease,color .15s ease;
+}
+.panel-arrow:hover{border-color:var(--ink-faint);color:var(--ink);}
+.panel-arrow svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.panel-status{display:flex;flex-direction:column;align-items:center;gap:.05rem;min-width:15rem;text-align:center;}
+.panel-status .p-index{font-family:"IBM Plex Mono";font-size:.7rem;letter-spacing:.1em;color:var(--ink-faint);}
+.panel-status .p-name{font-weight:700;font-size:.95rem;}
+
+@media (prefers-reduced-motion: reduce){
+  .panel-progress{display:none;}
+  .panel-slide.is-active{animation:none;}
+}
+
+/* icon list (Develop) */
+.feature-list{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem 2rem;margin-top:1rem;}
+@media (max-width:760px){.feature-list{grid-template-columns:1fr;}}
+.feature-item{display:flex;gap:.9rem;}
+.ico{
+  flex:none;width:2.3rem;height:2.3rem;border-radius:9px;background:var(--accent-soft);
+  display:grid;place-items:center;color:var(--accent-strong);
+}
+.ico svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.feature-item h3{font-size:1rem;font-weight:700;}
+.feature-item p{color:var(--ink-muted);font-size:.94rem;margin-top:.3rem;}
+.feature-item a.mono{color:var(--accent-strong);font-size:.82rem;display:inline-block;margin-top:.5rem;}
+
+.link-row a{font-family:"IBM Plex Mono";font-size:.85rem;font-weight:600;color:var(--accent-strong);}
+.link-row a::after{content:" \2192";}
+
+.code-wrap{border-radius:12px;overflow:hidden;background:var(--code-bg);box-shadow:var(--shadow);}
+.code-chrome{display:flex;align-items:center;gap:.4rem;padding:.6rem .85rem;border-bottom:1px solid rgba(255,255,255,.08);}
+.code-chrome span{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.18);}
+.code-chrome .cc-file{margin-left:.5rem;font-family:"IBM Plex Mono";font-size:.72rem;color:var(--code-muted);}
+pre{margin:0;padding:1.1rem 1.25rem;overflow-x:auto;font-family:"IBM Plex Mono";font-size:.82rem;line-height:1.65;color:var(--code-ink);}
+pre .tok-annot{color:var(--code-annot);}
+pre .tok-kw{color:var(--code-kw);}
+pre .tok-str{color:var(--code-str);}
+
+/* card grid (Write AI-Infused Applications topics) */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:1.6rem;}
+@media (max-width:900px){.card-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:600px){.card-grid{grid-template-columns:1fr;}}
+.card-grid:has(.tile[open]) .tile:not([open]){display:none;}
+.card-grid:has(.tile[open]) .tile[open]{grid-column:1/-1;}
+
+.tile{
+  border:1px solid var(--border);border-radius:14px;background:var(--surface);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.tile:hover{border-color:var(--ink-faint);}
+.tile[open]{border-color:var(--accent);box-shadow:var(--shadow);}
+.tile > summary{
+  list-style:none;cursor:pointer;padding:1.3rem;
+  display:flex;align-items:flex-start;gap:.9rem;
+}
+.tile > summary::-webkit-details-marker{display:none;}
+.tile .ico{margin-bottom:0;}
+.tile-head-text{min-width:0;flex:1;}
+.tile-title-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.tile h3{font-size:1rem;}
+.tile-teaser{color:var(--ink-muted);font-size:.9rem;margin-top:.35rem;}
+.chev{
+  flex:none;width:1.5rem;height:1.5rem;border-radius:50%;margin-left:auto;margin-top:.1rem;
+  border:1px solid var(--border);display:grid;place-items:center;color:var(--ink-faint);
+  transition:transform .2s ease,background .2s ease,border-color .2s ease,color .2s ease;
+}
+.chev svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;}
+.tile[open] .chev{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-strong);transform:rotate(45deg);}
+
+.tile-body{padding:0 1.3rem 1.3rem;}
+.tile-body p{color:var(--ink-muted);font-size:.92rem;margin-top:.7rem;}
+.tile-body p:first-child{margin-top:0;padding-top:.95rem;border-top:1px dashed var(--border);}
+.tile-body .code-wrap{margin-top:.9rem;}
+.tile-body .link-row{margin-top:.9rem;padding-top:.85rem;border-top:1px dashed var(--border);}
+.tile-body ul{margin:.6rem 0 0;padding-left:1.15rem;color:var(--ink-muted);font-size:.9rem;}
+.tile-body li{margin:.35rem 0;}
+.tile-body li strong{font-family:"IBM Plex Mono";font-weight:600;font-size:.92em;color:var(--ink);}
+
+.head-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+
+/* footer */
+footer{border-top:1px solid var(--border);padding:3rem 0 2rem;}
+.foot-grid{display:grid;grid-template-columns:1.4fr repeat(2,1fr);gap:2rem;}
+@media (max-width:700px){.foot-grid{grid-template-columns:1fr;}}
+.foot-brand{display:flex;align-items:center;gap:.5rem;font-weight:800;}
+.foot-brand-mark{width:1.1rem;height:1.1rem;display:block;}
+.foot-desc{color:var(--ink-muted);font-size:.9rem;margin-top:.8rem;max-width:32ch;}
+.foot-col h4{font-family:"IBM Plex Mono";font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.9rem;}
+.foot-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.6rem;}
+.foot-col a{color:var(--ink-muted);font-size:.9rem;}
+.foot-col a:hover{color:var(--ink);}
+.foot-bottom{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.82rem;}
+
+@media (prefers-reduced-motion: reduce){*{transition-duration:.001ms !important;}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <div class="brand">
+      <span class="sr-only">Quarkus AI</span>
+      <svg class="brand-logo" viewBox="0 0 1280 195" aria-hidden="true"><g fill="#fff"><path d="m404 89.39q0 25.9-10.49 43.07a52.31 52.31 0 0 1 -29.61 23.24l32.3 33.39h-22.91l-26.45-30.44-5.11.19q-30 0-46.27-18.22t-16.29-51.42q0-32.93 16.34-51.05t46.41-18.15q29.24 0 45.66 18.45t16.42 50.94zm-108.14 0q0 27.39 11.74 41.55t34.11 14.15q22.56 0 34.07-14.11t11.51-41.59q0-27.21-11.47-41.27t-33.9-14.07q-22.56 0-34.3 14.16t-11.74 41.18z"/><path d="m559.56 22.15v87.25q0 23.05-14 36.25t-38.56 13.19q-24.51 0-37.92-13.29t-13.38-36.55v-86.85h15.78v88q0 16.88 9.28 25.91t27.29 9q17.16 0 26.45-9.08t9.28-25.98v-87.85z"/><path d="m703.6 157-16.9-42.9h-54.39l-16.71 42.9h-16l53.69-135.4h13.27l53.37 135.4zm-21.82-57-15.78-41.79q-3.07-7.92-6.32-19.46a172.55 172.55 0 0 1 -5.85 19.46l-16 41.78z"/><path d="m777.19 100.92v56.08h-15.79v-134.85h37.23q25 0 36.89 9.5t11.93 28.59q0 26.74-27.29 36.16l36.84 60.6h-18.65l-32.86-56.07zm0-13.47h21.62q16.71 0 24.51-6.6t7.79-19.78q0-13.37-7.93-19.27t-25.48-5.91h-20.51z"/><path d="m999.75 157h-18.57l-49.47-65.4-14.2 12.54v52.86h-15.78v-134.85h15.78v66.85l61.54-66.87h18.66l-54.58 58.59z"/><path d="m1143.69 22.15v87.25q0 23.05-14 36.25t-38.52 13.19q-24.5 0-37.92-13.29t-13.43-36.55v-86.85h15.78v88q0 16.88 9.28 25.91t27.29 9q17.17 0 26.46-9.08t9.28-26.06v-87.77z"/><path d="m1279 121.11q0 17.8-13 27.76t-35.28 10q-24.13 0-37.13-6.18v-15.16a97.82 97.82 0 0 0 18.2 5.53 95.67 95.67 0 0 0 19.49 2q15.78 0 23.76-6t8-16.55q0-7-2.83-11.48t-9.46-8.26q-6.65-3.78-20.19-8.58-18.94-6.72-27.06-16t-8.12-24.07q0-15.58 11.79-24.81t31.18-9.22a92.55 92.55 0 0 1 37.22 7.37l-4.91 13.65q-16.82-7-32.68-7-12.53 0-19.58 5.35t-7.06 14.85q0 7 2.6 11.48t8.77 8.21q6.18 3.73 18.89 8.26 21.36 7.56 29.38 16.23t8.02 22.62z"/></g><path d="m126.05 34.6-29.44 16.99 29.44 17z" fill="#4695eb"/><path d="m67.17 34.6v33.99l29.44-17z" fill="#ff004a"/><path d="m126.05 68.59-29.44-17-29.44 17 29.44 17z" fill="#fff"/><path d="m36.13 88.36 29.44 17v-33.99z" fill="#4695eb"/><path d="m65.57 139.35 29.44-16.99-29.44-17z" fill="#ff004a"/><path d="m65.57 71.37v33.99l29.44 17v-34z" fill="#fff"/><path d="m127.65 139.35v-33.99l-29.44 17z" fill="#4695eb"/><path d="m157.09 88.36-29.44-16.99v33.99z" fill="#ff004a"/><path d="m98.21 122.36 29.44-17v-33.99l-29.44 16.99z" fill="#fff"/><path d="m160.5 1h-127.78a31.81 31.81 0 0 0 -31.72 31.72v127.78a31.81 31.81 0 0 0 31.72 31.72h87.51l-23.62-57.37-17.13 36.22h-46.76a10.71 10.71 0 0 1 -10.57-10.57v-127.78a10.71 10.71 0 0 1 10.57-10.57h127.78a10.71 10.71 0 0 1 10.57 10.57v127.78a10.71 10.71 0 0 1 -10.57 10.57h-27.73l8.71 21.15h19a31.81 31.81 0 0 0 31.72-31.72v-127.78a31.81 31.81 0 0 0 -31.7-31.72z" fill="#4695eb"/></svg>
+      <span class="brand-suffix">AI</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#develop">Develop</a>
+      <a href="#write">AI Apps</a>
+      <a href="#secure">Secure</a>
+      <a href="#test">Test</a>
+      <a href="#deploy">Deploy</a>
+      <a href="#monitor">Monitor</a>
+      <a href="#evaluate">Evaluate</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-secondary" href="community.html">Community</a>
+      <a class="btn btn-secondary" href="https://quarkus.io">Try it</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+      <h1>Quarkus AI</h1>
+    <h2>Enterprise AI for Java</h2>
+    <p class="lede">Write AI-infused Java applications that leverage the enterprise using our AI APIs and frameworks. Enhance your coding agent experience for any other Quarkus-based application too.</p>
+
+    <div class="chip-row">
+      <span>Coding Agents</span><span>AI Services</span><span>Tools</span><span>Chat</span><span>MCP</span><span>RAG</span><span>Agentic Workflows</span><span>Guardrails</span>
+    </div>
+  </div>
+</section>
+
+<div class="panel-region">
+  <div class="wrap">
+    <div class="panel">
+      <div class="panel-controls panel-controls-top">
+        <button type="button" class="panel-arrow panel-prev" aria-label="Previous section">
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <div class="panel-status">
+          <span class="p-index mono">01 / 07</span>
+          <span class="p-name">Develop</span>
+        </div>
+        <button type="button" class="panel-arrow panel-next" aria-label="Next section">
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="panel-progress"><div class="panel-progress-bar" id="panelBar"></div></div>
+      <div class="panel-slides" id="panelSlides">
+
+        <!-- DEVELOP -->
+        <div class="panel-slide" id="develop" data-name="Develop">
+          <div class="section-head">
+            <span class="eyebrow">Develop</span>
+            <h2>A better day-to-day with your coding agent</h2>
+            <p>Coding agents like Claude Code, GitHub Copilot, and JetBrains AI have driven an explosion in developer productivity. A few Quarkus features make working with them a genuinely different experience.</p>
+          </div>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
+              <div>
+                <h3>Live Coding</h3>
+                <p>The instant edit-and-see-it-run loop Node.js developers take for granted &mdash; Quarkus has had it for Java for years. Pair it with a coding agent and watch generated code come alive in real time.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div>
+              <div>
+                <h3>Dev Services</h3>
+                <p>Dev Services already auto-start what your app needs. For AI development that means MCP services, vector databases, and tools like LangFuse &mdash; built, tested, and observed entirely on your machine.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z"/></svg></div>
+              <div>
+                <h3>Built-in Skills</h3>
+                <p>Coding agents lean on Skill files to write good code from a knowledge base of experienced developers. Every Quarkus extension defines and publishes its own.</p>
+                <a class="mono" href="https://agentskills.io/home">What are Skills? &rarr;</a>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.2 11l7.6-4M8.2 13l7.6 4"/></svg></div>
+              <div>
+                <h3>MCP Coding Agent</h3>
+                <p>Quarkus runs its own developer MCP service, exposing documentation and Skills for every extension your project uses &mdash; so your agent can find what it needs without guessing.</p>
+                <a class="mono" href="https://quarkus.io/blog/introducing-agent-mcp/">How does Quarkus enhance coding agents? &rarr;</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WRITE -->
+        <div class="panel-slide" id="write" data-name="Write AI-Infused Applications">
+          <div class="section-head">
+            <span class="eyebrow">Write AI-Infused Applications</span>
+            <h2>Write AI-infused applications</h2>
+            <p>Quarkus AI gives your application the vocabulary to talk to models, call tools, retrieve knowledge, and act &mdash; all as ordinary CDI beans.</p>
+          </div>
+
+          <div class="card-grid">
+
+      <details class="tile" id="tile-ai-services" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M9 4C7 4 6 5 6 7v3a2 2 0 01-2 2 2 2 0 012 2v3c0 2 1 3 3 3"/><path d="M15 4c2 0 3 1 3 3v3a2 2 0 002 2 2 2 0 00-2 2v3c0 2-1 3-3 3"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>AI Services</h3></div>
+            <p class="tile-teaser">Simple Java interfaces for LLM interactions.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>LangChain4j gives Quarkus AI an abstraction layer over whichever model you choose &mdash; OpenAI, Ollama, and the rest of the LangChain4j catalogue &mdash; so switching providers is a config change, not a rewrite. Annotate a plain Java interface and Quarkus generates the AI Service that talks to the model for you.</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">Weatherman.java</span></div>
+            <pre><span class="tok-annot">@RegisterAiService</span>
+<span class="tok-kw">public interface</span> Weatherman {
+
+    <span class="tok-annot">@SystemMessage</span>(<span class="tok-str">"You are a weatherman.  Answer questions about the weather."</span>)
+    <span class="tok-kw">String</span> ask(<span class="tok-annot">@UserMessage</span> <span class="tok-kw">String</span> query);
+}</pre>
+          </div>
+          <p>Architecture at a glance: your code calls the interface, Quarkus AI routes the call through LangChain4j to the configured model, and hands back a typed response.</p>
+          <div class="link-row"><a href="https://bill.burkecentral.com/2025/11/25/managing-chat-memory-in-quarkus-langchain4j/">Managing Chat Memory in Quarkus LangChain4j</a></div>
+        </div>
+      </details>
+
+      <details class="tile" id="tile-tools" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="10" rx="2"/><path d="M8 9V6a2 2 0 012-2h4a2 2 0 012 2v3"/><path d="M3 13h18"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Tools</h3></div>
+            <p class="tile-teaser">Custom functions for your LLM.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p><em>Tools</em> are custom functions you provide to the LLM during a chat request that the LLM can use to process a response. The LLM looks at the user query and the list of functions you provide and decides whether or not it needs to pause text generation and call one of the functions to perform an action or to obtain more data.</p>
+          <p>Consider the <em>Weatherman</em> AI Service example. The LLM has no information about the current weather, so you add that functionality as a tool so it can answer queries successfully. This can easily be done with Quarkus AI.</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">WeatherAPIToolbox.java</span></div>
+            <pre><span class="tok-annot">@ApplicationScoped</span>
+<span class="tok-kw">public class</span> WeatherAPIToolbox {
+    // Pretend we have access to a Java weather API library that we can use!
+    <span class="tok-annot">@Inject</span>
+    WeatherAPI weather;
+
+    <span class="tok-annot">@Tool</span>(<span class="tok-str">"Get the current weather for a specific location"</span>)
+    <span class="tok-kw">public String</span> currentWeather(<span class="tok-kw">String</span> location) {
+        <span class="tok-kw">return</span> weather.currentForcast(location);
+    }
+
+    <span class="tok-annot">@Tool</span>(<span class="tok-str">"Get the 10 day weather forecast for a specific location"</span>)
+    <span class="tok-kw">public</span> List&lt;<span class="tok-kw">String</span>&gt; tenDayForecast(<span class="tok-kw">String</span> location) {
+        <span class="tok-kw">return</span> weather.tenDayForecast(location);
+    }
+}</pre>
+          </div>
+          <p>Once you have your tools defined, you can just wire them into your AI Service.</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">Weatherman.java</span></div>
+            <pre><span class="tok-annot">@RegisterAiService</span>
+<span class="tok-kw">public interface</span> Weatherman {
+
+    <span class="tok-annot">@SystemMessage</span>(<span class="tok-str">"You are a weatherman.  Answer questions about the weather."</span>)
+    <span class="tok-annot">@Toolbox</span>(WeatherAPIToolbox.<span class="tok-kw">class</span>)
+    <span class="tok-kw">String</span> ask(<span class="tok-annot">@UserMessage</span> <span class="tok-kw">String</span> query);
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details class="tile" id="tile-mcp" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.2 11l7.6-4M8.2 13l7.6 4"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Enterprise Tools with MCP</h3></div>
+            <p class="tile-teaser">Microservices for AI.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>Your organization has spent years writing microservices that analyze and report your company's data and implement the processes of your organization. Wouldn't it be cool to leverage these existing systems for use within an LLM? The MCP specification defines a remote protocol for interacting with AI tools that are deployed remotely.</p>
+          <p>Quarkus AI provides a way to define <a href="https://docs.quarkiverse.io/quarkus-mcp-server/dev/index.html" style="color:var(--accent-strong);text-decoration:underline;">your own MCP Server</a> to publish tools that can be used in any of your organization's LLM applications. Think of MCP as microservices for AI.</p>
+          <img src="https://docs.quarkiverse.io/quarkus-mcp-server/dev/_images/main.png" alt="Quarkus MCP Server architecture diagram" style="width:100%;border-radius:12px;box-shadow:var(--shadow);margin-top:.9rem;display:block;">
+          <p style="margin-top:.9rem;">Defining your own MCP Server is as easy as this:</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">WeatherAPIToolbox.java</span></div>
+            <pre><span class="tok-annot">@ApplicationScoped</span>
+<span class="tok-kw">public class</span> WeatherAPIToolbox {
+    // Pretend we have access to a Java weather API library that we can use!
+    <span class="tok-annot">@Inject</span>
+    WeatherAPI weather;
+
+    <span class="tok-annot">@Tool</span>(<span class="tok-str">"Get the current weather for a specific location"</span>)
+    <span class="tok-kw">public String</span> currentWeather(<span class="tok-kw">String</span> location) {
+        <span class="tok-kw">return</span> weather.currentForcast(location);
+    }
+
+    <span class="tok-annot">@Tool</span>(<span class="tok-str">"Get the 10 day weather forecast for a specific location"</span>)
+    <span class="tok-kw">public</span> List&lt;<span class="tok-kw">String</span>&gt; tenDayForecast(<span class="tok-kw">String</span> location) {
+        <span class="tok-kw">return</span> weather.tenDayForecast(location);
+    }
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details class="tile" id="tile-chat" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5z"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Rich Chat Applications</h3></div>
+            <p class="tile-teaser">Chat UIs are more than plain text.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>Professional chat applications generally do a lot more than just display plain text to their human users. The good ones like to format information that comes from the LLM in a rich way, like what we're used to with traditional UIs. Quarkus AI provides the architecture for writing Rich Chat UIs via the <a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/chat-scopes.html#_chat_invocation_framework_chatroute" style="color:var(--accent-strong);text-decoration:underline;">Chat Routes</a> framework.</p>
+          <p>Chat Routes provides a websocket protocol so that your UI clients can interact with your <a href="#tile-ai-services" style="color:var(--accent-strong);text-decoration:underline;">AI Services</a>. Simply annotate your AI Service methods with <code class="mono">@ChatRoute</code> and you're good to go.</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">Weatherman.java</span></div>
+            <pre><span class="tok-annot">@RegisterAiService</span>
+<span class="tok-kw">public interface</span> Weatherman {
+
+    <span class="tok-annot">@SystemMessage</span>(<span class="tok-str">"You are a weatherman.  Answer questions about the weather."</span>)
+    <span class="tok-annot">@ChatRoute</span>(<span class="tok-str">"weather-man"</span>)
+    <span class="tok-kw">String</span> ask(<span class="tok-annot">@UserMessage</span> <span class="tok-kw">String</span> query);
+}</pre>
+          </div>
+          <p>Chat Routes provides a Java and Javascript client API that allows you to send chat messages to your chat-routed AI Services.</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">client.js</span></div>
+            <pre>client = <span class="tok-kw">new</span> ChatScopesClient();
+<span class="tok-kw">await</span> client.open(<span class="tok-str">"ws://localhost:8080/_chat/routes"</span>);
+
+builder = client.builder();
+session = <span class="tok-kw">await</span> builder.connect(<span class="tok-str">"weather-man"</span>);
+
+session.chat(<span class="tok-str">"What's the weather like in San Francisco?"</span>);</pre>
+          </div>
+          <p>The Chat Routes framework also allows your server to send back messages to your clients. This is really useful from tool methods when you want to render something specific on the client, or to send thinking messages back to the chat UI.</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">WeatherAPIToolbox.java</span></div>
+            <pre><span class="tok-annot">@ApplicationScoped</span>
+<span class="tok-kw">public class</span> WeatherAPIToolbox {
+    // Pretend we have access to a Java weather API library that we can use!
+    <span class="tok-annot">@Inject</span>
+    WeatherAPI weather;
+
+    <span class="tok-annot">@Inject</span>
+    ChatRouteContext ctx;
+
+    <span class="tok-annot">@Tool</span>(<span class="tok-str">"Get the current weather for a specific location"</span>)
+    <span class="tok-kw">public String</span> currentWeather(<span class="tok-kw">String</span> location) {
+        // Send back a thinking message for chat UI to render while we wait for the API call to complete
+        ctx.thinking(<span class="tok-str">"Calling out to the national weather service for current forecast"</span>);
+        Forecast forecast = weather.currentForcast(location);
+        <span class="tok-kw">if</span> (forecast.type == RAIN) {
+            // have chat client render a RAIN icon
+            ctx.event(<span class="tok-str">"weather-alert"</span>, RAIN);
+        }
+        <span class="tok-kw">return</span> forecast.text();
+    }
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details class="tile" id="tile-rag" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Retrieval &amp; RAG</h3></div>
+            <p class="tile-teaser">Enterprise knowledge bases that you can query with AI.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>LLMs have a limitation on what they are trained on. You can still use an LLM to query and analyze your company's data, web sites, and documentation through a concept called RAG (Retrieval Augmented Generation). With RAG, you chunk and index your documentation and information within a Vector DB. At runtime, a user's query is turned into a vector and a similarity search is done within the Vector DB to pull all relevant text and information. These chunks are sent to the LLM along with the user's query and the LLM generates a response from it. Granted, there is more going on here, but that's the gist of it.</p>
+          <h3 style="font-size:1.25rem;margin-top:1.8rem;">Quarkus Easy RAG</h3>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.5rem;">If you just have a handful of documents that you want to chat about with your LLM, Quarkus Easy RAG allows you define a directory with your documents, and it will automatically be wired with in. No extra code.</p>
+          <h3 style="font-size:1.25rem;margin-top:1.8rem;">Advanced RAG Pipelines</h3>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.5rem;">RAG is generally more complex. You may have multiple sources of information you are federating together. There are various techniques to improve the quality of the results (i.e. Hybrid Search, Prompt Engineering, etc.). Bringing all these techniques together is called a <a href="https://docs.langchain4j.dev/tutorials/rag#advanced-rag" style="color:var(--accent-strong);text-decoration:underline;">RAG Pipeline</a>. Quarkus AI has <a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/rag.html" style="color:var(--accent-strong);text-decoration:underline;">abstractions and APIs</a> to help build each stage of this pipeline.</p>
+          <img src="https://quarkus.io/assets/images/ai/contextualrag-query.webp" alt="RAG Pipeline" style="width:100%;border-radius:12px;box-shadow:var(--shadow);margin-top:.9rem;display:block;">
+        </div>
+      </details>
+
+      <details class="tile" id="tile-agentic" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 6h11M4 12h16M4 18h8"/><circle cx="19" cy="6" r="1.6"/><circle cx="8" cy="18" r="1.6"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Agentic Workflows</h3></div>
+            <p class="tile-teaser">Agents that own a process end to end.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>Agentic Workflows allow you to encapsulate the complex processes and procedures of your business. To implement your process, you will have a combination of AI Agents, traditional enterprise coding, and human-in-the-loop interactions. Agentic Workflows provide the foundation to define and implement the interactions between all of these components. These workflows can be long-running, asynchronous, and can store state as needed. Quarkus AI provides the means for defining and implementing <a href="https://docs.langchain4j.dev/tutorials/agents" style="color:var(--accent-strong);text-decoration:underline;">Agentic Workflows</a>.</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">CreativeWriter.java</span></div>
+            <pre><span class="tok-kw">public interface</span> CreativeWriter {
+
+    <span class="tok-annot">@UserMessage</span>(<span class="tok-str">"""
+            You are a creative writer.
+            Generate a draft of a story no more than
+            3 sentences long around the given topic.
+            Return only the story and nothing else.
+            The topic is {{topic}}.
+            """</span>)
+    <span class="tok-annot">@Agent</span>(<span class="tok-str">"Generates a story based on the given topic"</span>)
+    <span class="tok-kw">String</span> generateStory(<span class="tok-annot">@V</span>(<span class="tok-str">"topic"</span>) <span class="tok-kw">String</span> topic);
+}</pre>
+          </div>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">Agents can generate output and accept input from both other agents and humans. Agent workflows have similar constructs to traditional workflow definition too, such as:</p>
+          <ul>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#sequential-workflow" style="color:var(--accent-strong);text-decoration:underline;">Sequential workflows</a></li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#loop-workflow" style="color:var(--accent-strong);text-decoration:underline;">Loops</a></li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#conditional-workflow" style="color:var(--accent-strong);text-decoration:underline;">Conditionals</a></li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#parallel-workflow" style="color:var(--accent-strong);text-decoration:underline;">Parallel execution</a></li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#human-in-the-loop" style="color:var(--accent-strong);text-decoration:underline;">Human-in-the-loop interactions</a></li>
+          </ul>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">The API also supports defining your own custom workflow patterns and steps. Some pre-defined patterns also have abstractions you can derive from:</p>
+          <ul>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#goal-oriented-agentic-pattern" style="color:var(--accent-strong);text-decoration:underline;">Goal oriented</a> patterns</li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#peer-to-peer-agentic-pattern" style="color:var(--accent-strong);text-decoration:underline;">Peer-to-peer</a></li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#blackboard-agentic-pattern" style="color:var(--accent-strong);text-decoration:underline;">Blackboard</a></li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#voting-agentic-pattern" style="color:var(--accent-strong);text-decoration:underline;">Voting</a></li>
+            <li><a href="https://docs.langchain4j.dev/tutorials/agents#belief-desire-intention-bdi-agentic-pattern" style="color:var(--accent-strong);text-decoration:underline;">Belief-Desire-Intention</a></li>
+          </ul>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">Check out the <a href="https://docs.langchain4j.dev/tutorials/agents" style="color:var(--accent-strong);text-decoration:underline;">documentation</a> for all the other features supported.</p>
+        </div>
+      </details>
+
+      <details class="tile" id="tile-guardrails" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Guardrails</h3></div>
+            <p class="tile-teaser">Safety controls between user and model.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>AI guardrails are safety controls, filters, and rules that sit between a user and an artificial intelligence model. They intercept inputs and outputs in real time to ensure the system behaves safely, stays on topic, and complies with legal or brand standards without changing the core model.</p>
+          <p>Quarkus AI supports both input and output guardrails. Input guardrails are used to catch things like prompt injection attacks or out-of-scope questions. Output Guardrails can be used to anonymize or redact sensitive information returned from an LLM response.</p>
+          <img src="https://docs.langchain4j.dev/img/guardrails-light-bg.png" alt="Guardrails architecture" style="width:100%;border-radius:12px;box-shadow:var(--shadow);margin-top:.9rem;display:block;">
+          <h3 style="font-size:1.25rem;margin-top:1.8rem;">A Simple Example</h3>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.5rem;">Here's a minimal input guardrail that rejects blank messages before they ever reach the model:</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">NotBlankGuardrail.java</span></div>
+            <pre><span class="tok-kw">public class</span> NotBlankGuardrail <span class="tok-kw">implements</span> InputGuardrail {
+
+    <span class="tok-annot">@Override</span>
+    <span class="tok-kw">public</span> InputGuardrailResult validate(UserMessage userMessage) {
+        <span class="tok-kw">if</span> (userMessage.singleText().isBlank()) {
+            <span class="tok-kw">return</span> failure(<span class="tok-str">"Message cannot be blank"</span>);
+        }
+        <span class="tok-kw">return</span> success();
+    }
+}</pre>
+          </div>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">Wire it into an AI Service with the <code class="mono">@InputGuardrails</code> annotation:</p>
+          <div class="code-wrap">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">Weatherman.java</span></div>
+            <pre><span class="tok-kw">public interface</span> Weatherman {
+
+    <span class="tok-annot">@SystemMessage</span>(<span class="tok-str">"You are a weatherman.  Answer questions about the weather."</span>)
+    <span class="tok-annot">@InputGuardrails</span>(NotBlankGuardrail.<span class="tok-kw">class</span>)
+    <span class="tok-kw">String</span> ask(<span class="tok-annot">@UserMessage</span> <span class="tok-kw">String</span> query);
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details class="tile" id="tile-cdi" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Glued Together with Quarkus</h3></div>
+            <p class="tile-teaser">Every AI component is a CDI bean.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>Every AI component &mdash; <a href="#tile-ai-services" style="color:var(--accent-strong);text-decoration:underline;">AI Services</a>, Tools, RAG, agents &mdash; is a CDI bean, so the rest of Quarkus Core is never more than an <code class="mono">@Inject</code> away. Components are discovered and auto-wired at build time. All this makes writing AI applications feel like a completely integrated experience and reviewing agent-generated code becomes much easier.</p>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">Some things to note:</p>
+          <ul>
+            <li><strong>Chat Memory</strong> and <strong>Agentic Context</strong> lifecycle is <a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/messages-and-memory.html#_cdi_scope_and_memory_isolation" style="color:var(--accent-strong);text-decoration:underline;">managed by CDI bean scope</a></li>
+            <li>The LC4J <code class="mono">@MemoryId</code> concept can be managed by Quarkus so you don't have to do it yourself</li>
+            <li>Two new CDI scopes purpose-built for AI
+              <ul>
+                <li><strong>@ChatScope</strong> to manage different LLM conversations</li>
+                <li><strong>@InvocationScope</strong> for a single LLM interaction</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="tile" id="tile-enterprise-java" name="write-topics">
+        <summary>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M9 3h6v3.5a2 2 0 002 2H21v6h-3.5a2 2 0 00-2 2V21H9v-3.5a2 2 0 00-2-2H3v-6h3.5a2 2 0 002-2V3z"/></svg></div>
+          <div class="tile-head-text">
+            <div class="tile-title-row"><h3>Leverage Enterprise Java</h3></div>
+            <p class="tile-teaser">The whole Quarkus ecosystem, still there.</p>
+          </div>
+          <span class="chev"><svg viewBox="0 0 10 10"><path d="M5 0v10M0 5h10"/></svg></span>
+        </summary>
+        <div class="tile-body">
+          <p>AI Applications don't exist in a vacuum. Your AI Chat App will need to pull information and data from existing systems and microservices. Your <a href="#tile-agentic" style="color:var(--accent-strong);text-decoration:underline;">Agentic Workflows</a> will need to publish and subscribe to event-driven systems that already exist in your organization. The Quarkus platform as a whole integrates with all the popular Enterprise Java frameworks you love and have been using for years: Hibernate, Camel, REST (JAX-RS), Kafka, etc.</p>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">Quarkus also has a rich ecosystem of hundreds of extensions written by the Quarkus community. Browse the extensions catalog on <a href="https://code.quarkus.io" style="color:var(--accent-strong);text-decoration:underline;">code.quarkus.io</a> and <a href="https://extensions.quarkus.io" style="color:var(--accent-strong);text-decoration:underline;">extensions.quarkus.io</a> to see what's available.</p>
+        </div>
+      </details>
+
+          </div>
+        </div>
+
+        <!-- SECURE -->
+        <div class="panel-slide" id="secure" data-name="Secure">
+          <div class="section-head">
+            <span class="eyebrow">Secure</span>
+            <h2>Secure your AI Applications</h2>
+            <p style="margin-top:.7rem;"><a href="https://quarkus.io/guides/security-overview" style="color:var(--accent-strong);text-decoration:underline;">Quarkus Security</a> has provided the features developers need to secure their Enterprise Java applications. Securing secrets, authentication protocols like OAuth2 and OIDC, and role-based access control among many other features have been available and mature for years within Quarkus.</p>
+          </div>
+          <p style="color:var(--ink-muted);font-size:.94rem;">AI-infused applications are generally built on top of the same protocols as traditional web applications and services so to secure them, just leverage what's there right now. Here's a few samples:</p>
+          <ul style="margin:.6rem 0 0;padding-left:1.15rem;color:var(--ink-muted);font-size:.94rem;">
+            <li style="margin:.35rem 0;"><a href="https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples/secure-sql-chatbot" style="color:var(--accent-strong);text-decoration:underline;">Securing a Chat Bot</a></li>
+            <li style="margin:.35rem 0;"><a href="https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples/secure-mcp-client-server" style="color:var(--accent-strong);text-decoration:underline;">Securing an MCP client and server</a></li>
+          </ul>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">AI Applications introduce a few more security vulnerabilities you need to be aware of. The Quarkus team has put together a <a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/security.html" style="color:var(--accent-strong);text-decoration:underline;">blueprint</a> dealing with these vulnerabilities.</p>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;"><a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/guardrails.html" style="color:var(--accent-strong);text-decoration:underline;">Guardrails</a> are also an important part of this.</p>
+        </div>
+
+        <!-- TEST -->
+        <div class="panel-slide" id="test" data-name="Test">
+          <div class="section-head">
+            <span class="eyebrow">Test</span>
+            <h2>Test AI Apps</h2>
+            <p style="margin-top:.7rem;">Quarkus has a great <a href="https://quarkus.io/guides/getting-started-testing" style="color:var(--accent-strong);text-decoration:underline;">test harness</a> for testing any Quarkus-based application, but testing interactions with the LLM can be a little tricky. Since the output of your code's interactions with the LLM is non-deterministic, you will probably get a different output even if you send in the same input every time. So, how can you test your <a href="#tile-ai-services" style="color:var(--accent-strong);text-decoration:underline;">AI Services</a>? Quarkus provides an <a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/testing.html" style="color:var(--accent-strong);text-decoration:underline;">evaluation test harness</a> you can use.</p>
+          </div>
+          <p style="color:var(--ink-muted);font-size:.94rem;">What you do is provide a set of sample inputs and expected outputs. Quarkus then scores the output of your LLM against the expected output. If the score is above a certain threshold, Quarkus passes the test.</p>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;">Here's a very simple example:</p>
+          <div class="code-wrap" style="margin-top:.9rem;">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">WeathermanTest.java</span></div>
+            <pre><span class="tok-annot">@QuarkusTest</span>
+<span class="tok-annot">@Evaluate</span>
+<span class="tok-kw">public class</span> WeathermanTest {
+
+    <span class="tok-annot">@Inject</span>
+    Weatherman weatherman;
+
+    <span class="tok-annot">@Test</span>
+    <span class="tok-kw">void</span> repliesAreCloseEnoughToExpected(
+            <span class="tok-annot">@ScorerConfiguration</span>(concurrency = 3) Scorer scorer,
+            <span class="tok-annot">@SampleLocation</span>(<span class="tok-str">"src/test/resources/samples.yaml"</span>) Samples&lt;String&gt; samples) {
+
+        EvaluationReport&lt;String&gt; report = scorer.evaluate(
+                samples,
+                params -&gt; weatherman.ask(params.get(0)),
+                <span class="tok-kw">new</span> SemanticSimilarityStrategy(0.8));
+
+        assertThat(report).hasScoreGreaterThan(70.0);
+    }
+}</pre>
+          </div>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.9rem;"><code class="mono">samples.yaml</code>:</p>
+          <div class="code-wrap" style="margin-top:.9rem;">
+            <div class="code-chrome"><span></span><span></span><span></span><span class="cc-file">samples.yaml</span></div>
+            <pre>- name: Current Weather
+  parameters:
+    - <span class="tok-str">"What is the current weather in San Diego?"</span>
+  expected-output: <span class="tok-str">"It is sunny and the temperature is 72 degrees."</span></pre>
+          </div>
+        </div>
+
+        <!-- DEPLOY -->
+        <div class="panel-slide" id="deploy" data-name="Deploy">
+          <div class="section-head">
+            <span class="eyebrow">Deploy</span>
+            <h2>Quarkus already runs everywhere!</h2>
+            <p style="margin-top:.7rem;">One of the key benefits of writing AI-Applications with Quarkus is that you inherit all the benefits of a mature Enterprise Java stack. When deploying your AI Application you'll find that because you used Quarkus, you can deploy it anywhere. Quarkus has integration and support to run on OpenShift, Kubernetes, AWS, AWS Lambda, Azure, and Azure Functions and many other platforms.</p>
+          </div>
+          <ul style="margin:.6rem 0 0;padding-left:1.15rem;color:var(--ink-muted);font-size:.94rem;">
+            <li style="margin:.35rem 0;"><a href="https://quarkus.io/guides/container-image" style="color:var(--accent-strong);text-decoration:underline;">Build a Container Image</a></li>
+            <li style="margin:.35rem 0;"><a href="https://quarkus.io/guides/deploying-to-openshift" style="color:var(--accent-strong);text-decoration:underline;">Deploy to OpenShift</a></li>
+            <li style="margin:.35rem 0;"><a href="https://quarkus.io/guides/deploying-to-kubernetes" style="color:var(--accent-strong);text-decoration:underline;">Deploy to Kubernetes</a></li>
+            <li style="margin:.35rem 0;"><a href="https://aws.amazon.com/blogs/containers/how-to-deploy-your-quarkus-application-to-amazon-eks/" style="color:var(--accent-strong);text-decoration:underline;">Deploy to AWS</a></li>
+            <li style="margin:.35rem 0;"><a href="https://quarkus.io/guides/aws-lambda" style="color:var(--accent-strong);text-decoration:underline;">Deploy to AWS Lambda</a></li>
+            <li style="margin:.35rem 0;"><a href="https://quarkus.io/guides/deploying-to-azure-cloud" style="color:var(--accent-strong);text-decoration:underline;">Deploy to Azure</a></li>
+            <li style="margin:.35rem 0;"><a href="https://quarkus.io/guides/azure-functions" style="color:var(--accent-strong);text-decoration:underline;">Deploy to Azure Functions</a></li>
+            <li style="margin:.35rem 0;"><a href="https://quarkus.io/guides/deploying-to-google-cloud" style="color:var(--accent-strong);text-decoration:underline;">Deploy to Google Cloud</a></li>
+          </ul>
+        </div>
+
+        <!-- MONITOR -->
+        <div class="panel-slide" id="monitor" data-name="Monitor">
+          <div class="section-head">
+            <span class="eyebrow">Monitor</span>
+            <h2 style="margin-top:.6rem;">Monitoring, Tracing, and Metrics</h2>
+            <p style="margin-top:.7rem;">Quarkus AI publishes OpenTelemetry metrics and traces that can be consumed by Prometheus or other monitoring systems. In particular, it has great integration with <a href="https://langfuse.com" style="color:var(--accent-strong);text-decoration:underline;">LangFuse</a>. LangFuse monitoring features allow you to make sense of all your AI telemetry data.</p>
+          </div>
+          <h3 style="font-size:1.25rem;">Tracing</h3>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.5rem;">Quarkus AI publishes traces to the OpenTelemetry collector which LangFuse can consume. You can view individual conversation traces as your users and agents interact with the LLM.</p>
+          <img src="tracing-overview.png" alt="Conversation Trace" style="width:100%;border-radius:12px;box-shadow:var(--shadow);margin-top:.9rem;display:block;">
+          <h3 style="font-size:1.25rem;margin-top:1.8rem;">Metrics</h3>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.5rem;">The telemetry data published also allows LangFuse to provide insight into the performance of your AI model and application.</p>
+          <img src="llm-analytics.png" alt="Metrics" style="width:100%;border-radius:12px;box-shadow:var(--shadow);margin-top:.9rem;display:block;">
+        </div>
+
+        <!-- EVALUATE & SCORE -->
+        <div class="panel-slide" id="evaluate" data-name="Evaluate &amp; Score">
+          <div class="section-head">
+            <span class="eyebrow">Evaluate &amp; Score</span>
+            <h2 style="margin-top:.6rem;">Evaluate &amp; Score</h2>
+            <p style="margin-top:.7rem;">LLMs are non-deterministic. When you switch out a model, change your prompts, or modify your RAG pipeline, how do you know if your changes improved the user experience? This is where Evaluation and Scoring comes in. Conversations with the LLM are scored using various scoring strategies. From those scores you can determine the quality of your AI applications.</p>
+          </div>
+          <p style="color:var(--ink-muted);font-size:.94rem;">Evaluation makes a lot of sense when writing unit and integration tests, that was covered earlier on the <a href="#test" style="color:var(--accent-strong);text-decoration:underline;">Test</a> page. But, evaluation can also be done at runtime or post production to analyze patterns and trends. Quarkus AI's integration with <a href="https://langfuse.com" style="color:var(--accent-strong);text-decoration:underline;">LangFuse</a> makes it easy to evaluate and score your AI applications.</p>
+          <h3 style="font-size:1.25rem;margin-top:1.8rem;">Evaluation and LangFuse</h3>
+          <p style="color:var(--ink-muted);font-size:.94rem;margin-top:.5rem;">LangFuse allows you to define data sets on a set of traces. From these data sets you can run your dataset through two versions of your system, and compare what comes out. The result tells you whether a change actually helped, and by how much. LangFuse allows you to define and apply different evaluation and scoring strategies to your data sets so you can determine the quality of your AI applications.</p>
+          <img src="score-analytics-full-dashboard.png" alt="Scoring" style="width:100%;border-radius:12px;box-shadow:var(--shadow);margin-top:.9rem;display:block;">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <svg class="foot-brand-mark" viewBox="0 0 196 196" aria-hidden="true"><path d="m126.05 34.6-29.44 16.99 29.44 17z" fill="#4695eb"/><path d="m67.17 34.6v33.99l29.44-17z" fill="#ff004a"/><path d="m126.05 68.59-29.44-17-29.44 17 29.44 17z" fill="currentColor"/><path d="m36.13 88.36 29.44 17v-33.99z" fill="#4695eb"/><path d="m65.57 139.35 29.44-16.99-29.44-17z" fill="#ff004a"/><path d="m65.57 71.37v33.99l29.44 17v-34z" fill="currentColor"/><path d="m127.65 139.35v-33.99l-29.44 17z" fill="#4695eb"/><path d="m157.09 88.36-29.44-16.99v33.99z" fill="#ff004a"/><path d="m98.21 122.36 29.44-17v-33.99l-29.44 16.99z" fill="currentColor"/><path d="m160.5 1h-127.78a31.81 31.81 0 0 0 -31.72 31.72v127.78a31.81 31.81 0 0 0 31.72 31.72h87.51l-23.62-57.37-17.13 36.22h-46.76a10.71 10.71 0 0 1 -10.57-10.57v-127.78a10.71 10.71 0 0 1 10.57-10.57h127.78a10.71 10.71 0 0 1 10.57 10.57v127.78a10.71 10.71 0 0 1 -10.57 10.57h-27.73l8.71 21.15h19a31.81 31.81 0 0 0 31.72-31.72v-127.78a31.81 31.81 0 0 0 -31.7-31.72z" fill="#4695eb"/></svg>
+          Quarkus AI
+        </div>
+        <p class="foot-desc">Enterprise AI for Java. Written for and by developers &mdash; coding still matters.</p>
+      </div>
+      <div class="foot-col">
+        <h4>On this page</h4>
+        <ul>
+          <li><a href="#develop">Develop</a></li>
+          <li><a href="#write">Write AI-Infused Applications</a></li>
+          <li><a href="#secure">Secure</a></li>
+          <li><a href="#test">Test</a></li>
+          <li><a href="#deploy">Deploy</a></li>
+          <li><a href="#monitor">Monitor</a></li>
+          <li><a href="#evaluate">Evaluate &amp; Score</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://quarkus.io/blog/introducing-agent-mcp/">Development blueprint</a></li>
+          <li><a href="https://bill.burkecentral.com/2025/11/25/managing-chat-memory-in-quarkus-langchain4j/">Managing Chat Memory</a></li>
+          <li><a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/chat-scopes.html#_chat_invocation_framework_chatroute">Chat Invocation Framework</a></li>
+          <li><a href="https://agentskills.io/home">Skill files</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom mono">Built from the project README.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var region = document.querySelector('.panel-region');
+  var slidesEl = document.getElementById('panelSlides');
+  var panelEl = document.querySelector('.panel');
+  if(!region || !slidesEl || !panelEl) return;
+
+  var slides = Array.prototype.slice.call(slidesEl.querySelectorAll('.panel-slide'));
+  var bar = document.getElementById('panelBar');
+  var indexEls = Array.prototype.slice.call(panelEl.querySelectorAll('.p-index'));
+  var nameEls = Array.prototype.slice.call(panelEl.querySelectorAll('.p-name'));
+  var prevBtns = Array.prototype.slice.call(panelEl.querySelectorAll('.panel-prev'));
+  var nextBtns = Array.prototype.slice.call(panelEl.querySelectorAll('.panel-next'));
+  var jumpLinks = Array.prototype.slice.call(document.querySelectorAll('a[href^="#"]')).filter(function(a){
+    return slides.some(function(s){ return '#' + s.id === a.getAttribute('href'); });
+  });
+
+  var INTERVAL = 6000;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var idx = 0;
+  var autoplay = !reduceMotion;
+  var timer = null;
+  var animating = false;
+
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function render(){
+    slides.forEach(function(s, i){ s.classList.toggle('is-active', i === idx); });
+    var indexText = pad(idx + 1) + ' / ' + pad(slides.length);
+    var nameText = slides[idx].dataset.name || slides[idx].id;
+    indexEls.forEach(function(el){ el.textContent = indexText; });
+    nameEls.forEach(function(el){ el.textContent = nameText; });
+    jumpLinks.forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('href') === '#' + slides[idx].id);
+    });
+  }
+
+  function resizeAndRender(newIdx){
+    var oldHeight = slidesEl.offsetHeight;
+    slidesEl.style.transition = 'none';
+    slidesEl.style.height = oldHeight + 'px';
+    void slidesEl.offsetHeight;
+    slidesEl.style.transition = '';
+
+    idx = newIdx;
+    render();
+
+    var newHeight = slidesEl.scrollHeight;
+    animating = true;
+    requestAnimationFrame(function(){
+      slidesEl.style.height = newHeight + 'px';
+    });
+    clearTimeout(resizeAndRender._fallback);
+    resizeAndRender._fallback = setTimeout(finishResize, 500);
+  }
+
+  function finishResize(){
+    if(!animating) return;
+    animating = false;
+    slidesEl.style.height = 'auto';
+  }
+  slidesEl.addEventListener('transitionend', function(e){
+    if(e.propertyName === 'height') finishResize();
+  });
+
+  function playBar(){
+    bar.classList.remove('bar-anim');
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    void bar.offsetWidth;
+    bar.style.transition = '';
+    bar.classList.add('bar-anim');
+  }
+
+  function freezeBar(){
+    var w = getComputedStyle(bar).width;
+    bar.classList.remove('bar-anim');
+    bar.style.width = w;
+    bar.style.opacity = '0';
+  }
+
+  function scheduleNext(){
+    clearTimeout(timer);
+    if(!autoplay) return;
+    playBar();
+    timer = setTimeout(function(){
+      activate(idx + 1);
+      scheduleNext();
+    }, INTERVAL);
+  }
+
+  function stopAutoplay(){
+    if(!autoplay) return;
+    autoplay = false;
+    clearTimeout(timer);
+    freezeBar();
+  }
+
+  function activate(i){
+    if(animating) return;
+    var n = slides.length;
+    resizeAndRender(((i % n) + n) % n);
+  }
+
+  function navigate(i){
+    activate(i);
+    stopAutoplay();
+  }
+
+  prevBtns.forEach(function(btn){ btn.addEventListener('click', function(){ navigate(idx - 1); }); });
+  nextBtns.forEach(function(btn){ btn.addEventListener('click', function(){ navigate(idx + 1); }); });
+
+  jumpLinks.forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href').slice(1);
+      var target = slides.findIndex(function(s){ return s.id === id; });
+      if(target === -1) return;
+      e.preventDefault();
+      navigate(target);
+      panelEl.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
+
+  panelEl.addEventListener('click', function(){ stopAutoplay(); });
+
+  function tileSlideIndex(tile){
+    var slide = tile.closest('.panel-slide');
+    return slide ? slides.indexOf(slide) : -1;
+  }
+
+  function openTile(id, immediate){
+    var tile = document.getElementById(id);
+    if(!tile || !tile.classList.contains('tile')) return false;
+    var slideIdx = tileSlideIndex(tile);
+    if(slideIdx === -1) return false;
+    if(immediate){
+      idx = slideIdx;
+    } else if(slideIdx !== idx){
+      activate(slideIdx);
+    }
+    tile.open = true;
+    requestAnimationFrame(function(){
+      tile.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+    return true;
+  }
+
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if(!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if(openTile(id)) stopAutoplay();
+  });
+
+  window.addEventListener('hashchange', function(){
+    if(openTile(location.hash.slice(1))) stopAutoplay();
+  });
+
+  if(location.hash && openTile(location.hash.slice(1), true)){
+    autoplay = false;
+  }
+
+  render();
+  if(autoplay) scheduleNext();
+})();
+</script>
+
+</body>
+</html>
