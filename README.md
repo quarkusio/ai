@@ -19,7 +19,7 @@ we are trying to coordinate a bunch of different repos, it's logical to have an 
 
 ## Contributing to Quarkus AI Web Page
 
-We've been using our favorite coding agent to develop the web page.  ThContent will be defined in markdown files in the [website](website) directory
+We've been using our favorite coding agent to develop the web page.  ThContent will be defined in markdown files in the [docs](docs) directory
 and synced to the appropriate .html files within that same directory.
 
 When you want to change the content of the web page, please do your work in the corresponding markdown file.  Then use your
