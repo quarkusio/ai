@@ -14,7 +14,7 @@ And probably more as time goes on.
 
 * High level issues and discussions that link to issues in the individual projects mentioned above.  Because
 we are trying to coordinate a bunch of different repos, it's logical to have an umbrella repo for these issues.
-* The Quarkus AI webpage. (Link to be added)
+* The Quarkus AI webpage. Viewable at [https://quarkus.io/ai](https://quarkus.io/ai)
 * Quarkus AI blueprint sample applications
 
 ## Contributing to Quarkus AI Web Page
