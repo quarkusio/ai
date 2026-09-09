@@ -3,10 +3,11 @@
 This git project is an umbrella project for Quarkus AI development.  Quarkus AI is a conglomeration of a few different
 projects:
 
-* LC4J
-* Quarkus LC4J
-* LangFuse
-* Quarkus LangFuse
+* [LC4J](https://github.com/langchain4j/langchain4j)
+* [Quarkus LC4J](https://github.com/quarkiverse/quarkus-langchain4j)
+* [LangFuse](https://github.com/langfuse/langfuse)
+* [Quarkus LangFuse](https://github.com/quarkiverse/quarkus-langfuse)
+* [Quarkus MCP Server](https://github.com/quarkiverse/quarkus-mcp-server)
 
 And probably more as time goes on.
 
